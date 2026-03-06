@@ -3,13 +3,20 @@ import '../models/data_store.dart';
 import 'book_ride.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('TriRide'),
+        title: Row(
+          children: [
+            Image.asset(
+              'assets/images/TriRide Logo Mini.png',
+              height: 50,
+            ),
+          ],
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.notifications_outlined),
@@ -149,14 +156,15 @@ class HomeScreen extends StatelessWidget {
                         ),
                   ),
                   const SizedBox(height: 16),
-                  ...DataStore.rideHistory.take(2).map((ride) {
+                  ...DataStore.rideHistory.take(4).map((ride) {
+                    final driver = DataStore.drivers.firstWhere(
+                      (d) => d.plateNumber == ride.plateNumber,
+                      orElse: () => DataStore.drivers.first,
+                    );
                     return Card(
                       margin: const EdgeInsets.only(bottom: 12),
                       child: ListTile(
-                        leading: CircleAvatar(
-                          backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-                          child: const Icon(Icons.check, color: Colors.green),
-                        ),
+                        leading: _buildDriverAvatar(driver.imageUrl, context),
                         title: Text(ride.driverName),
                         subtitle: Text('${ride.pickup} → ${ride.destination}'),
                         trailing: Text(
@@ -168,7 +176,7 @@ class HomeScreen extends StatelessWidget {
                         ),
                       ),
                     );
-                  }).toList(),
+                  }),
                 ],
               ),
             ),
@@ -176,6 +184,25 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget _buildDriverAvatar(String imageUrl, BuildContext context) {
+    if (imageUrl.startsWith('assets/')) {
+      return CircleAvatar(
+        radius: 24,
+        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+        backgroundImage: AssetImage(imageUrl),
+        onBackgroundImageError: (exception, stackTrace) {},
+      );
+    } else {
+      return CircleAvatar(
+        radius: 24,
+        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+        child: imageUrl.length <= 2
+            ? Text(imageUrl, style: const TextStyle(fontSize: 24))
+            : const Icon(Icons.person, size: 24),
+      );
+    }
   }
 
   Widget _buildStatCard(BuildContext context, String title, String value,

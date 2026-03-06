@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import '../models/data_store.dart';
 import '../models/driver.dart';
 import 'driver_details.dart';
+import 'dart:io';
 
 class ExploreDriversScreen extends StatefulWidget {
-  const ExploreDriversScreen({Key? key}) : super(key: key);
+  const ExploreDriversScreen({super.key});
 
   @override
   State<ExploreDriversScreen> createState() => _ExploreDriversScreenState();
@@ -47,6 +48,7 @@ class _ExploreDriversScreenState extends State<ExploreDriversScreen> {
             padding: const EdgeInsets.all(16),
             child: Column(
               children: [
+                // Search Field
                 TextField(
                   decoration: InputDecoration(
                     hintText: 'Search drivers or plate number...',
@@ -63,6 +65,7 @@ class _ExploreDriversScreenState extends State<ExploreDriversScreen> {
                   },
                 ),
                 const SizedBox(height: 12),
+                // Sorting
                 Row(
                   children: [
                     const Text('Sort by: '),
@@ -99,6 +102,7 @@ class _ExploreDriversScreenState extends State<ExploreDriversScreen> {
               ],
             ),
           ),
+          // Driver List
           Expanded(
             child: _filteredAndSortedDrivers.isEmpty
                 ? const Center(
@@ -125,16 +129,10 @@ class _ExploreDriversScreenState extends State<ExploreDriversScreen> {
                             padding: const EdgeInsets.all(16),
                             child: Row(
                               children: [
-                                CircleAvatar(
-                                  radius: 30,
-                                  backgroundColor:
-                                      Theme.of(context).colorScheme.primaryContainer,
-                                  child: Text(
-                                    driver.imageUrl,
-                                    style: const TextStyle(fontSize: 32),
-                                  ),
-                                ),
+                                // Driver Image
+                                _buildDriverAvatar(driver, context),
                                 const SizedBox(width: 16),
+                                // Driver Info
                                 Expanded(
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -182,6 +180,7 @@ class _ExploreDriversScreenState extends State<ExploreDriversScreen> {
                                     ],
                                   ),
                                 ),
+                                // Fare and ETA
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
@@ -214,5 +213,31 @@ class _ExploreDriversScreenState extends State<ExploreDriversScreen> {
         ],
       ),
     );
+  }
+
+  Widget _buildDriverAvatar(Driver driver, BuildContext context) {
+    // Check if image path exists and is valid
+    if (driver.imageUrl.startsWith('assets/')) {
+      return CircleAvatar(
+        radius: 30,
+        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+        backgroundImage: AssetImage(driver.imageUrl),
+        onBackgroundImageError: (exception, stackTrace) {
+          // If image fails to load, it will show the default background color
+        },
+      );
+    } else {
+      // If it's not an asset path, treat it as emoji or icon
+      return CircleAvatar(
+        radius: 30,
+        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+        child: driver.imageUrl.length <= 2
+            ? Text(
+                driver.imageUrl,
+                style: const TextStyle(fontSize: 32),
+              )
+            : const Icon(Icons.person, size: 32),
+      );
+    }
   }
 }

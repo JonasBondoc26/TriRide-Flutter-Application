@@ -5,7 +5,7 @@ import '../models/data_store.dart';
 import '../models/ride.dart';
 
 class BookRideScreen extends StatefulWidget {
-  const BookRideScreen({Key? key}) : super(key: key);
+  const BookRideScreen({super.key});
 
   @override
   State<BookRideScreen> createState() => _BookRideScreenState();
@@ -474,7 +474,7 @@ class _BookRideScreenState extends State<BookRideScreen> {
                     ),
                     const SizedBox(height: 12),
                     DropdownButtonFormField<String>(
-                      value: _selectedPayment,
+                      initialValue: _selectedPayment,
                       decoration: InputDecoration(
                         labelText: 'Payment Method',
                         prefixIcon: const Icon(Icons.payment),

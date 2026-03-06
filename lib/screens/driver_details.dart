@@ -4,7 +4,7 @@ import '../models/driver.dart';
 class DriverDetailsScreen extends StatelessWidget {
   final Driver driver;
 
-  const DriverDetailsScreen({Key? key, required this.driver}) : super(key: key);
+  const DriverDetailsScreen({super.key, required this.driver});
 
   @override
   Widget build(BuildContext context) {
@@ -28,14 +28,7 @@ class DriverDetailsScreen extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  CircleAvatar(
-                    radius: 60,
-                    backgroundColor: Colors.white,
-                    child: Text(
-                      driver.imageUrl,
-                      style: const TextStyle(fontSize: 64),
-                    ),
-                  ),
+                  _buildDriverAvatar(driver, context),
                   const SizedBox(height: 16),
                   Text(
                     driver.name,
@@ -141,6 +134,33 @@ class DriverDetailsScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget _buildDriverAvatar(Driver driver, BuildContext context) {
+    // Check if image path is an asset
+    if (driver.imageUrl.startsWith('assets/')) {
+      return CircleAvatar(
+        radius: 60,
+        backgroundColor: Colors.white,
+        backgroundImage: AssetImage(driver.imageUrl),
+        onBackgroundImageError: (exception, stackTrace) {
+          // Fallback handled by child
+        },
+        child: null, // Will show background image if it loads
+      );
+    } else {
+      // If it's not an asset path, treat it as emoji or show icon
+      return CircleAvatar(
+        radius: 60,
+        backgroundColor: Colors.white,
+        child: driver.imageUrl.length <= 2
+            ? Text(
+                driver.imageUrl,
+                style: const TextStyle(fontSize: 64),
+              )
+            : const Icon(Icons.person, size: 64, color: Colors.grey),
+      );
+    }
   }
 
   Widget _buildInfoCard(

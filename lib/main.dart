@@ -27,9 +27,10 @@ class TriRideApp extends StatelessWidget {
       title: 'TriRide',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.cyan, 
         colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF2196F3),
+          seedColor: const Color(0xFF1E3D56), 
+          secondary: const Color(0xFF36A79F),  
           brightness: Brightness.light,
         ),
         useMaterial3: true,

@@ -5,7 +5,7 @@ import 'package:image/image.dart' as img;
 import '../models/data_store.dart';
 
 class ImageEditorScreen extends StatefulWidget {
-  const ImageEditorScreen({Key? key}) : super(key: key);
+  const ImageEditorScreen({super.key});
 
   @override
   State<ImageEditorScreen> createState() => _ImageEditorScreenState();

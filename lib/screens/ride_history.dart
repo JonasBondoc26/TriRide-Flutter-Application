@@ -3,7 +3,7 @@ import '../models/data_store.dart';
 import 'ride_details.dart';
 
 class RideHistoryScreen extends StatefulWidget {
-  const RideHistoryScreen({Key? key}) : super(key: key);
+  const RideHistoryScreen({super.key});
 
   @override
   State<RideHistoryScreen> createState() => _RideHistoryScreenState();
