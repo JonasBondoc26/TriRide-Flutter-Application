@@ -1,9 +1,32 @@
 import 'package:flutter/material.dart';
 import '../models/data_store.dart';
+import '../services/weather_service.dart';
+import '../models/weather.dart';
 import 'book_ride.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  // Holds the future so it isn't recreated on every rebuild
+  late Future<WeatherData> _weatherFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _weatherFuture = WeatherService.fetchCurrentWeather();
+  }
+
+  /// Retry — creates a new Future and triggers a rebuild
+  void _retryWeather() {
+    setState(() {
+      _weatherFuture = WeatherService.fetchCurrentWeather();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +51,7 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // ── Greeting banner 
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(24),
@@ -57,11 +81,18 @@ class HomeScreen extends StatelessWidget {
                 ],
               ),
             ),
+
             Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // ── Weather Card (REST API) 
+                  _buildWeatherCard(context),
+
+                  const SizedBox(height: 16),
+
+                  // ── Book a Ride card 
                   Card(
                     child: InkWell(
                       onTap: () {
@@ -79,7 +110,9 @@ class HomeScreen extends StatelessWidget {
                             Container(
                               padding: const EdgeInsets.all(12),
                               decoration: BoxDecoration(
-                                color: Theme.of(context).colorScheme.primaryContainer,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .primaryContainer,
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: Icon(
@@ -117,7 +150,10 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ),
                   ),
+
                   const SizedBox(height: 24),
+
+                  // ── Quick Stats
                   Text(
                     'Quick Stats',
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -148,7 +184,10 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ],
                   ),
+
                   const SizedBox(height: 24),
+
+                  // ── Recent Rides 
                   Text(
                     'Recent Rides',
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -164,9 +203,11 @@ class HomeScreen extends StatelessWidget {
                     return Card(
                       margin: const EdgeInsets.only(bottom: 12),
                       child: ListTile(
-                        leading: _buildDriverAvatar(driver.imageUrl, context),
+                        leading:
+                            _buildDriverAvatar(driver.imageUrl, context),
                         title: Text(ride.driverName),
-                        subtitle: Text('${ride.pickup} → ${ride.destination}'),
+                        subtitle:
+                            Text('${ride.pickup} → ${ride.destination}'),
                         trailing: Text(
                           '₱${ride.fare.toStringAsFixed(0)}',
                           style: const TextStyle(
@@ -179,6 +220,121 @@ class HomeScreen extends StatelessWidget {
                   }),
                 ],
               ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ── Weather card widget 
+  Widget _buildWeatherCard(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(Icons.wb_sunny_outlined,
+                    color: Theme.of(context).colorScheme.primary),
+                const SizedBox(width: 8),
+                Text(
+                  'Current Weather – Angeles City',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+
+            // FutureBuilder handles the three states of the API call:
+            // loading, error, and success.
+            FutureBuilder<WeatherData>(
+              future: _weatherFuture,
+              builder: (context, snapshot) {
+                // ── Loading state ──────────────────────────────────────
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const SizedBox(
+                    height: 60,
+                    child: Center(child: CircularProgressIndicator()),
+                  );
+                }
+
+                // ── Error state ────────────────────────────────────────
+                if (snapshot.hasError) {
+                  return Row(
+                    children: [
+                      const Icon(Icons.cloud_off, color: Colors.red),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          'Could not load weather data.',
+                          style: TextStyle(color: Colors.red[700]),
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: _retryWeather,
+                        child: const Text('Retry'),
+                      ),
+                    ],
+                  );
+                }
+
+                // ── Success state 
+                final weather = snapshot.data!;
+                return Row(
+                  children: [
+                    Text(
+                      weather.iconEmoji,
+                      style: const TextStyle(fontSize: 48),
+                    ),
+                    const SizedBox(width: 16),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${weather.temperatureCelsius.toStringAsFixed(1)}°C',
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineMedium
+                              ?.copyWith(fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          weather.description,
+                          style: const TextStyle(
+                              fontSize: 14, color: Colors.grey),
+                        ),
+                      ],
+                    ),
+                    const Spacer(),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Row(
+                          children: [
+                            const Icon(Icons.air, size: 16, color: Colors.grey),
+                            const SizedBox(width: 4),
+                            Text(
+                              '${weather.windspeed.toStringAsFixed(1)} km/h',
+                              style: const TextStyle(
+                                  fontSize: 13, color: Colors.grey),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          'Wind speed',
+                          style: TextStyle(
+                              fontSize: 11, color: Colors.grey[500]),
+                        ),
+                      ],
+                    ),
+                  ],
+                );
+              },
             ),
           ],
         ),
@@ -223,10 +379,7 @@ class HomeScreen extends StatelessWidget {
             const SizedBox(height: 4),
             Text(
               title,
-              style: const TextStyle(
-                color: Colors.grey,
-                fontSize: 12,
-              ),
+              style: const TextStyle(color: Colors.grey, fontSize: 12),
               textAlign: TextAlign.center,
             ),
           ],
