@@ -40,7 +40,9 @@ class _ExploreDriversScreenState extends State<ExploreDriversScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: const Color(0xFF183D59),
         title: const Text('Available Drivers'),
+        foregroundColor: Colors.white,
       ),
       body: Column(
         children: [
@@ -52,11 +54,12 @@ class _ExploreDriversScreenState extends State<ExploreDriversScreen> {
                 TextField(
                   decoration: InputDecoration(
                     hintText: 'Search drivers or plate number...',
-                    prefixIcon: const Icon(Icons.search),
+                    prefixIcon: const Icon(Icons.search, color: Color(0xFF183D59)),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
                     filled: true,
+                    fillColor: const Color(0xFFF5F5F5),
                   ),
                   onChanged: (value) {
                     setState(() {
@@ -68,7 +71,7 @@ class _ExploreDriversScreenState extends State<ExploreDriversScreen> {
                 // Sorting
                 Row(
                   children: [
-                    const Text('Sort by: '),
+                    const Text('Sort by: ', style: TextStyle(fontWeight: FontWeight.bold)),
                     const SizedBox(width: 8),
                     Expanded(
                       child: SegmentedButton<String>(
@@ -90,6 +93,9 @@ class _ExploreDriversScreenState extends State<ExploreDriversScreen> {
                           ),
                         ],
                         selected: {_sortBy},
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(const Color(0xFF31A9A2).withOpacity(0.1)),
+                        ),
                         onSelectionChanged: (Set<String> newSelection) {
                           setState(() {
                             _sortBy = newSelection.first;
@@ -106,7 +112,7 @@ class _ExploreDriversScreenState extends State<ExploreDriversScreen> {
           Expanded(
             child: _filteredAndSortedDrivers.isEmpty
                 ? const Center(
-                    child: Text('No drivers found'),
+                    child: Text('No drivers found', style: TextStyle(color: Colors.grey)),
                   )
                 : ListView.builder(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -114,8 +120,11 @@ class _ExploreDriversScreenState extends State<ExploreDriversScreen> {
                     itemBuilder: (context, index) {
                       final driver = _filteredAndSortedDrivers[index];
                       return Card(
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                         margin: const EdgeInsets.only(bottom: 12),
+                        elevation: 2,
                         child: InkWell(
+                          borderRadius: BorderRadius.circular(12),
                           onTap: () {
                             Navigator.push(
                               context,
@@ -142,6 +151,7 @@ class _ExploreDriversScreenState extends State<ExploreDriversScreen> {
                                         style: const TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 16,
+                                          color: Color(0xFF183D59),
                                         ),
                                       ),
                                       const SizedBox(height: 4),
@@ -171,10 +181,16 @@ class _ExploreDriversScreenState extends State<ExploreDriversScreen> {
                                           const Icon(
                                             Icons.near_me,
                                             size: 16,
-                                            color: Colors.blue,
+                                            color: Color(0xFF31A9A2),
                                           ),
                                           const SizedBox(width: 4),
-                                          Text('${driver.distance} km'),
+                                          Text(
+                                            '${driver.distance} km',
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              color: Color(0xFF183D59),
+                                            ),
+                                          ),
                                         ],
                                       ),
                                     ],
@@ -189,7 +205,7 @@ class _ExploreDriversScreenState extends State<ExploreDriversScreen> {
                                       style: const TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 20,
-                                        color: Colors.green,
+                                        color: Color(0xFFF2862E),
                                       ),
                                     ),
                                     const SizedBox(height: 4),
@@ -216,27 +232,23 @@ class _ExploreDriversScreenState extends State<ExploreDriversScreen> {
   }
 
   Widget _buildDriverAvatar(Driver driver, BuildContext context) {
-    // Check if image path exists and is valid
     if (driver.imageUrl.startsWith('assets/')) {
       return CircleAvatar(
         radius: 30,
-        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+        backgroundColor: const Color(0xFF31A9A2).withOpacity(0.2),
         backgroundImage: AssetImage(driver.imageUrl),
-        onBackgroundImageError: (exception, stackTrace) {
-          // If image fails to load, it will show the default background color
-        },
+        onBackgroundImageError: (exception, stackTrace) {},
       );
     } else {
-      // If it's not an asset path, treat it as emoji or icon
       return CircleAvatar(
         radius: 30,
-        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+        backgroundColor: const Color(0xFF31A9A2).withOpacity(0.2),
         child: driver.imageUrl.length <= 2
             ? Text(
                 driver.imageUrl,
-                style: const TextStyle(fontSize: 32),
+                style: const TextStyle(fontSize: 32, color: Color(0xFF183D59)),
               )
-            : const Icon(Icons.person, size: 32),
+            : const Icon(Icons.person, size: 32, color: Color(0xFF183D59)),
       );
     }
   }

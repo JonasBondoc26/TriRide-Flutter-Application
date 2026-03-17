@@ -39,7 +39,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Please agree to the Terms and Conditions'),
-          backgroundColor: Colors.orange,
+          backgroundColor: Color(0xFFF2862E),
         ),
       );
       return;
@@ -59,22 +59,19 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
     if (!mounted) return;
 
     if (result['success']) {
-      // Show success message
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(result['message']),
-          backgroundColor: Colors.green,
+          backgroundColor: const Color(0xFF31A9A2),
         ),
       );
 
-      // Navigate to main screen
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => const MainScreen()),
         (route) => false,
       );
     } else {
-      // Show error message
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(result['message']),
@@ -89,6 +86,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Create Account'),
+        backgroundColor: const Color(0xFF183D59),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -103,6 +101,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                   'Join TriRide',
                   style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                         fontWeight: FontWeight.bold,
+                        color: const Color(0xFF183D59),
                       ),
                 ),
                 const SizedBox(height: 8),
@@ -122,7 +121,8 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                   decoration: InputDecoration(
                     labelText: 'Full Name',
                     hintText: 'Enter your full name',
-                    prefixIcon: const Icon(Icons.person_outlined),
+                    prefixIcon:
+                        const Icon(Icons.person_outlined, color: Color(0xFF31A9A2)),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -146,7 +146,8 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                   decoration: InputDecoration(
                     labelText: 'Email',
                     hintText: 'Enter your email',
-                    prefixIcon: const Icon(Icons.email_outlined),
+                    prefixIcon:
+                        const Icon(Icons.email_outlined, color: Color(0xFF31A9A2)),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -174,7 +175,8 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                   decoration: InputDecoration(
                     labelText: 'Phone Number',
                     hintText: '+63 912 345 6789',
-                    prefixIcon: const Icon(Icons.phone_outlined),
+                    prefixIcon:
+                        const Icon(Icons.phone_outlined, color: Color(0xFF31A9A2)),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -198,12 +200,14 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                   decoration: InputDecoration(
                     labelText: 'Password',
                     hintText: 'Create a password',
-                    prefixIcon: const Icon(Icons.lock_outlined),
+                    prefixIcon:
+                        const Icon(Icons.lock_outlined, color: Color(0xFF31A9A2)),
                     suffixIcon: IconButton(
                       icon: Icon(
                         _obscurePassword
                             ? Icons.visibility_outlined
                             : Icons.visibility_off_outlined,
+                        color: const Color(0xFF183D59),
                       ),
                       onPressed: () {
                         setState(() {
@@ -238,12 +242,14 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                   decoration: InputDecoration(
                     labelText: 'Confirm Password',
                     hintText: 'Re-enter your password',
-                    prefixIcon: const Icon(Icons.lock_outlined),
+                    prefixIcon:
+                        const Icon(Icons.lock_outlined, color: Color(0xFF31A9A2)),
                     suffixIcon: IconButton(
                       icon: Icon(
                         _obscureConfirmPassword
                             ? Icons.visibility_outlined
                             : Icons.visibility_off_outlined,
+                        color: const Color(0xFF183D59),
                       ),
                       onPressed: () {
                         setState(() {
@@ -272,6 +278,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                   children: [
                     Checkbox(
                       value: _agreeToTerms,
+                      activeColor: const Color(0xFF31A9A2),
                       onChanged: (value) {
                         setState(() {
                           _agreeToTerms = value ?? false;
@@ -296,7 +303,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                               TextSpan(
                                 text: 'Terms and Conditions',
                                 style: TextStyle(
-                                  color: Theme.of(context).colorScheme.primary,
+                                  color: const Color(0xFF31A9A2),
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -304,7 +311,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                               TextSpan(
                                 text: 'Privacy Policy',
                                 style: TextStyle(
-                                  color: Theme.of(context).colorScheme.primary,
+                                  color: const Color(0xFF31A9A2),
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -321,7 +328,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: Colors.blue[50],
+                    color: const Color(0xFF31A9A2).withOpacity(0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Column(
@@ -329,16 +336,13 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                     children: [
                       Row(
                         children: [
-                          Icon(Icons.info_outline, 
-                            color: Colors.blue[700], 
-                            size: 20
-                          ),
+                          Icon(Icons.info_outline, color: const Color(0xFF183D59), size: 20),
                           const SizedBox(width: 8),
                           Text(
                             'Password Requirements',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              color: Colors.blue[700],
+                              color: const Color(0xFF183D59),
                             ),
                           ),
                         ],
@@ -356,6 +360,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                   onPressed: _isLoading ? null : _handleCreateAccount,
                   style: FilledButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 16),
+                    backgroundColor: const Color(0xFFF2862E),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -405,16 +410,13 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
       padding: const EdgeInsets.only(bottom: 4),
       child: Row(
         children: [
-          Icon(Icons.check_circle_outline, 
-            size: 16, 
-            color: Colors.blue[700]
-          ),
+          Icon(Icons.check_circle_outline, size: 16, color: const Color(0xFF183D59)),
           const SizedBox(width: 8),
           Text(
             text,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 12,
-              color: Colors.blue[700],
+              color: Color(0xFF183D59),
             ),
           ),
         ],

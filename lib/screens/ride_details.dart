@@ -16,16 +16,19 @@ class RideDetailsScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: const Color(0xFF183D59),
         title: const Text('Ride Details'),
         actions: [
           IconButton(
             icon: const Icon(Icons.delete),
+            color: Colors.red,
             onPressed: () {
               showDialog(
                 context: context,
                 builder: (context) => AlertDialog(
                   title: const Text('Delete Ride'),
-                  content: const Text('Are you sure you want to delete this ride?'),
+                  content: const Text(
+                      'Are you sure you want to delete this ride?'),
                   actions: [
                     TextButton(
                       onPressed: () => Navigator.pop(context),
@@ -33,7 +36,8 @@ class RideDetailsScreen extends StatelessWidget {
                     ),
                     FilledButton(
                       onPressed: () {
-                        DataStore.rideHistory.removeWhere((r) => r.id == ride.id);
+                        DataStore.rideHistory
+                            .removeWhere((r) => r.id == ride.id);
                         Navigator.pop(context);
                         Navigator.pop(context);
                         ScaffoldMessenger.of(context).showSnackBar(
@@ -52,15 +56,18 @@ class RideDetailsScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
+            // ── Header with driver avatar and ride status
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(32),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    Theme.of(context).colorScheme.primary,
-                    Theme.of(context).colorScheme.primaryContainer,
+                    const Color(0xFF183D59),
+                    const Color(0xFF2E5C7F),
                   ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
                 ),
               ),
               child: Column(
@@ -78,17 +85,26 @@ class RideDetailsScreen extends StatelessWidget {
                   const SizedBox(height: 8),
                   Text(
                     '${ride.dateTime.month}/${ride.dateTime.day}/${ride.dateTime.year} at ${ride.dateTime.hour}:${ride.dateTime.minute.toString().padLeft(2, '0')}',
-                    style: const TextStyle(color: Colors.white70, fontSize: 14),
+                    style: const TextStyle(
+                      color: Colors.white70,
+                      fontSize: 14,
+                    ),
                   ),
                 ],
               ),
             ),
+
             Padding(
               padding: const EdgeInsets.all(24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // ── Driver Info Card
                   Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    elevation: 2,
                     child: Padding(
                       padding: const EdgeInsets.all(16),
                       child: Column(
@@ -96,19 +112,28 @@ class RideDetailsScreen extends StatelessWidget {
                         children: [
                           Text(
                             'Driver Information',
-                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium
+                                ?.copyWith(fontWeight: FontWeight.bold),
                           ),
                           const SizedBox(height: 16),
                           _buildInfoRow(Icons.person, 'Driver', ride.driverName),
-                          _buildInfoRow(Icons.confirmation_number, 'Plate Number', ride.plateNumber),
+                          _buildInfoRow(Icons.confirmation_number, 'Plate Number',
+                              ride.plateNumber),
                         ],
                       ),
                     ),
                   ),
+
                   const SizedBox(height: 16),
+
+                  // ── Trip Details Card
                   Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    elevation: 2,
                     child: Padding(
                       padding: const EdgeInsets.all(16),
                       child: Column(
@@ -116,14 +141,17 @@ class RideDetailsScreen extends StatelessWidget {
                         children: [
                           Text(
                             'Trip Details',
-                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium
+                                ?.copyWith(fontWeight: FontWeight.bold),
                           ),
                           const SizedBox(height: 16),
                           _buildInfoRow(Icons.my_location, 'Pickup', ride.pickup),
-                          _buildInfoRow(Icons.location_on, 'Destination', ride.destination),
-                          _buildInfoRow(Icons.payments, 'Fare', '₱${ride.fare.toStringAsFixed(0)}'),
+                          _buildInfoRow(
+                              Icons.location_on, 'Destination', ride.destination),
+                          _buildInfoRow(Icons.payments, 'Fare',
+                              '₱${ride.fare.toStringAsFixed(0)}'),
                         ],
                       ),
                     ),
@@ -137,6 +165,7 @@ class RideDetailsScreen extends StatelessWidget {
     );
   }
 
+  // ── Driver Avatar
   Widget _buildDriverAvatar(String imageUrl, BuildContext context) {
     if (imageUrl.startsWith('assets/')) {
       return CircleAvatar(
@@ -156,6 +185,7 @@ class RideDetailsScreen extends StatelessWidget {
     }
   }
 
+  // ── Info Row
   Widget _buildInfoRow(IconData icon, String label, String value) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),

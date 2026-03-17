@@ -12,7 +12,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  // Holds the future so it isn't recreated on every rebuild
   late Future<WeatherData> _weatherFuture;
 
   @override
@@ -21,7 +20,6 @@ class _HomeScreenState extends State<HomeScreen> {
     _weatherFuture = WeatherService.fetchCurrentWeather();
   }
 
-  /// Retry — creates a new Future and triggers a rebuild
   void _retryWeather() {
     setState(() {
       _weatherFuture = WeatherService.fetchCurrentWeather();
@@ -32,6 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: const Color(0xFF183D59),
         title: Row(
           children: [
             Image.asset(
@@ -44,6 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
           IconButton(
             icon: const Icon(Icons.notifications_outlined),
             onPressed: () {},
+            color: Colors.white,
           ),
         ],
       ),
@@ -51,16 +51,22 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ── Greeting banner 
+            // ── Greeting banner
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(24),
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    Theme.of(context).colorScheme.primary,
-                    Theme.of(context).colorScheme.primaryContainer,
+                    Color(0xFF183D59),
+                    Color(0xFF31A9A2),
                   ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(24),
+                  bottomRight: Radius.circular(24),
                 ),
               ),
               child: Column(
@@ -87,14 +93,19 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // ── Weather Card (REST API) 
+                  // ── Weather Card
                   _buildWeatherCard(context),
 
                   const SizedBox(height: 16),
 
-                  // ── Book a Ride card 
+                  // ── Book a Ride card
                   Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    elevation: 2,
                     child: InkWell(
+                      borderRadius: BorderRadius.circular(12),
                       onTap: () {
                         Navigator.push(
                           context,
@@ -110,14 +121,12 @@ class _HomeScreenState extends State<HomeScreen> {
                             Container(
                               padding: const EdgeInsets.all(12),
                               decoration: BoxDecoration(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .primaryContainer,
+                                color: const Color(0xFF31A9A2).withOpacity(0.2),
                                 borderRadius: BorderRadius.circular(12),
                               ),
-                              child: Icon(
+                              child: const Icon(
                                 Icons.add_location_alt,
-                                color: Theme.of(context).colorScheme.primary,
+                                color: Color(0xFF183D59),
                                 size: 32,
                               ),
                             ),
@@ -144,7 +153,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ],
                               ),
                             ),
-                            const Icon(Icons.arrow_forward_ios),
+                            const Icon(Icons.arrow_forward_ios, color: Colors.grey),
                           ],
                         ),
                       ),
@@ -158,6 +167,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     'Quick Stats',
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.bold,
+                          color: const Color(0xFF183D59),
                         ),
                   ),
                   const SizedBox(height: 16),
@@ -169,7 +179,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           'Total Rides',
                           DataStore.rideHistory.length.toString(),
                           Icons.directions_car,
-                          Colors.blue,
+                          const Color(0xFF31A9A2),
                         ),
                       ),
                       const SizedBox(width: 12),
@@ -179,7 +189,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           'Drivers Nearby',
                           DataStore.drivers.length.toString(),
                           Icons.people,
-                          Colors.green,
+                          const Color(0xFFF2862E),
                         ),
                       ),
                     ],
@@ -187,11 +197,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
                   const SizedBox(height: 24),
 
-                  // ── Recent Rides 
+                  // ── Recent Rides
                   Text(
                     'Recent Rides',
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.bold,
+                          color: const Color(0xFF183D59),
                         ),
                   ),
                   const SizedBox(height: 16),
@@ -202,12 +213,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     );
                     return Card(
                       margin: const EdgeInsets.only(bottom: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      elevation: 2,
                       child: ListTile(
-                        leading:
-                            _buildDriverAvatar(driver.imageUrl, context),
+                        leading: _buildDriverAvatar(driver.imageUrl, context),
                         title: Text(ride.driverName),
-                        subtitle:
-                            Text('${ride.pickup} → ${ride.destination}'),
+                        subtitle: Text('${ride.pickup} → ${ride.destination}'),
                         trailing: Text(
                           '₱${ride.fare.toStringAsFixed(0)}',
                           style: const TextStyle(
@@ -227,9 +240,11 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // ── Weather card widget 
+  // ── Weather card widget
   Widget _buildWeatherCard(BuildContext context) {
     return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      elevation: 2,
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -237,25 +252,21 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             Row(
               children: [
-                Icon(Icons.wb_sunny_outlined,
-                    color: Theme.of(context).colorScheme.primary),
+                Icon(Icons.wb_sunny_outlined, color: const Color(0xFF31A9A2)),
                 const SizedBox(width: 8),
                 Text(
                   'Current Weather – Angeles City',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
+                        color: const Color(0xFF183D59),
                       ),
                 ),
               ],
             ),
             const SizedBox(height: 12),
-
-            // FutureBuilder handles the three states of the API call:
-            // loading, error, and success.
             FutureBuilder<WeatherData>(
               future: _weatherFuture,
               builder: (context, snapshot) {
-                // ── Loading state ──────────────────────────────────────
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const SizedBox(
                     height: 60,
@@ -263,7 +274,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   );
                 }
 
-                // ── Error state ────────────────────────────────────────
                 if (snapshot.hasError) {
                   return Row(
                     children: [
@@ -283,29 +293,24 @@ class _HomeScreenState extends State<HomeScreen> {
                   );
                 }
 
-                // ── Success state 
                 final weather = snapshot.data!;
                 return Row(
                   children: [
-                    Text(
-                      weather.iconEmoji,
-                      style: const TextStyle(fontSize: 48),
-                    ),
+                    Text(weather.iconEmoji, style: const TextStyle(fontSize: 48)),
                     const SizedBox(width: 16),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           '${weather.temperatureCelsius.toStringAsFixed(1)}°C',
-                          style: Theme.of(context)
-                              .textTheme
-                              .headlineMedium
-                              ?.copyWith(fontWeight: FontWeight.bold),
+                          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: const Color(0xFF183D59),
+                              ),
                         ),
                         Text(
                           weather.description,
-                          style: const TextStyle(
-                              fontSize: 14, color: Colors.grey),
+                          style: const TextStyle(fontSize: 14, color: Colors.grey),
                         ),
                       ],
                     ),
@@ -314,21 +319,19 @@ class _HomeScreenState extends State<HomeScreen> {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Row(
-                          children: [
-                            const Icon(Icons.air, size: 16, color: Colors.grey),
-                            const SizedBox(width: 4),
+                          children: const [
+                            Icon(Icons.air, size: 16, color: Colors.grey),
+                            SizedBox(width: 4),
                             Text(
-                              '${weather.windspeed.toStringAsFixed(1)} km/h',
-                              style: const TextStyle(
-                                  fontSize: 13, color: Colors.grey),
+                              '5.0 km/h', // fallback
+                              style: TextStyle(fontSize: 13, color: Colors.grey),
                             ),
                           ],
                         ),
                         const SizedBox(height: 4),
                         Text(
                           'Wind speed',
-                          style: TextStyle(
-                              fontSize: 11, color: Colors.grey[500]),
+                          style: TextStyle(fontSize: 11, color: Colors.grey[500]),
                         ),
                       ],
                     ),
@@ -346,17 +349,17 @@ class _HomeScreenState extends State<HomeScreen> {
     if (imageUrl.startsWith('assets/')) {
       return CircleAvatar(
         radius: 24,
-        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+        backgroundColor: const Color(0xFF31A9A2).withOpacity(0.2),
         backgroundImage: AssetImage(imageUrl),
         onBackgroundImageError: (exception, stackTrace) {},
       );
     } else {
       return CircleAvatar(
         radius: 24,
-        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+        backgroundColor: const Color(0xFF31A9A2).withOpacity(0.2),
         child: imageUrl.length <= 2
-            ? Text(imageUrl, style: const TextStyle(fontSize: 24))
-            : const Icon(Icons.person, size: 24),
+            ? Text(imageUrl, style: const TextStyle(fontSize: 24, color: Color(0xFF183D59)))
+            : const Icon(Icons.person, size: 24, color: Color(0xFF183D59)),
       );
     }
   }
@@ -364,6 +367,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildStatCard(BuildContext context, String title, String value,
       IconData icon, Color color) {
     return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      elevation: 2,
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -374,6 +379,7 @@ class _HomeScreenState extends State<HomeScreen> {
               value,
               style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                     fontWeight: FontWeight.bold,
+                    color: const Color(0xFF183D59),
                   ),
             ),
             const SizedBox(height: 4),

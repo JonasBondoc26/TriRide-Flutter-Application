@@ -10,20 +10,24 @@ class DriverDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: const Color(0xFF183D59),
         title: const Text('Driver Details'),
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
+            // ── Header
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(32),
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    Theme.of(context).colorScheme.primary,
-                    Theme.of(context).colorScheme.primaryContainer,
+                    Color(0xFF183D59),
+                    Color(0xFF31A9A2),
                   ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
                 ),
               ),
               child: Column(
@@ -44,7 +48,7 @@ class DriverDetailsScreen extends StatelessWidget {
                     children: [
                       Icon(
                         Icons.star,
-                        color: Colors.amber[300],
+                        color: Colors.amber[400],
                         size: 20,
                       ),
                       const SizedBox(width: 4),
@@ -60,6 +64,8 @@ class DriverDetailsScreen extends StatelessWidget {
                 ],
               ),
             ),
+
+            // ── Info Cards
             Padding(
               padding: const EdgeInsets.all(24),
               child: Column(
@@ -89,6 +95,8 @@ class DriverDetailsScreen extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 24),
+
+                  // ── Book Ride Button
                   SizedBox(
                     width: double.infinity,
                     child: FilledButton.icon(
@@ -105,6 +113,9 @@ class DriverDetailsScreen extends StatelessWidget {
                                 child: const Text('Cancel'),
                               ),
                               FilledButton(
+                                style: FilledButton.styleFrom(
+                                  backgroundColor: const Color(0xFF31A9A2),
+                                ),
                                 onPressed: () {
                                   Navigator.pop(context);
                                   Navigator.pop(context);
@@ -123,6 +134,7 @@ class DriverDetailsScreen extends StatelessWidget {
                       icon: const Icon(Icons.check_circle),
                       label: const Text('Book This Ride'),
                       style: FilledButton.styleFrom(
+                        backgroundColor: const Color(0xFF183D59),
                         padding: const EdgeInsets.symmetric(vertical: 16),
                       ),
                     ),
@@ -137,26 +149,21 @@ class DriverDetailsScreen extends StatelessWidget {
   }
 
   Widget _buildDriverAvatar(Driver driver, BuildContext context) {
-    // Check if image path is an asset
     if (driver.imageUrl.startsWith('assets/')) {
       return CircleAvatar(
         radius: 60,
         backgroundColor: Colors.white,
         backgroundImage: AssetImage(driver.imageUrl),
-        onBackgroundImageError: (exception, stackTrace) {
-          // Fallback handled by child
-        },
-        child: null, // Will show background image if it loads
+        child: null,
       );
     } else {
-      // If it's not an asset path, treat it as emoji or show icon
       return CircleAvatar(
         radius: 60,
         backgroundColor: Colors.white,
         child: driver.imageUrl.length <= 2
             ? Text(
                 driver.imageUrl,
-                style: const TextStyle(fontSize: 64),
+                style: const TextStyle(fontSize: 64, color: Color(0xFF183D59)),
               )
             : const Icon(Icons.person, size: 64, color: Colors.grey),
       );
@@ -166,6 +173,8 @@ class DriverDetailsScreen extends StatelessWidget {
   Widget _buildInfoCard(
       BuildContext context, String title, List<Widget> children) {
     return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      elevation: 2,
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -175,6 +184,7 @@ class DriverDetailsScreen extends StatelessWidget {
               title,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
+                    color: const Color(0xFF183D59),
                   ),
             ),
             const SizedBox(height: 16),
@@ -205,6 +215,7 @@ class DriverDetailsScreen extends StatelessWidget {
             style: const TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 14,
+              color: Color(0xFF31A9A2),
             ),
           ),
         ],

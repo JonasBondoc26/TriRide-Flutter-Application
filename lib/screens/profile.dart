@@ -16,13 +16,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final currentUser = AuthService.currentUser;
-    
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Profile'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.logout),
+            icon: Icon(Icons.logout, color: Theme.of(context).colorScheme.error),
             onPressed: () async {
               final confirm = await showDialog<bool>(
                 context: context,
@@ -36,6 +36,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     FilledButton(
                       onPressed: () => Navigator.pop(context, true),
+                      style: FilledButton.styleFrom(
+                        backgroundColor: Theme.of(context).colorScheme.error,
+                      ),
                       child: const Text('Logout'),
                     ),
                   ],
@@ -57,6 +60,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
+            // ── Profile Header
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(32),
@@ -79,7 +83,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ? MemoryImage(DataStore.userProfileImage!)
                             : null,
                         child: DataStore.userProfileImage == null
-                            ? const Icon(Icons.person, size: 50)
+                            ? Icon(Icons.person, size: 50, color: Colors.grey[700])
                             : null,
                       ),
                       Positioned(
@@ -98,15 +102,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           child: Container(
                             padding: const EdgeInsets.all(8),
                             decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.primary,
+                              color: Theme.of(context).colorScheme.secondary,
                               shape: BoxShape.circle,
                               border: Border.all(color: Colors.white, width: 2),
                             ),
-                            child: const Icon(
-                              Icons.camera_alt,
-                              color: Colors.white,
-                              size: 20,
-                            ),
+                            child: const Icon(Icons.camera_alt, color: Colors.white, size: 20),
                           ),
                         ),
                       ),
@@ -132,54 +132,52 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ],
               ),
             ),
+
             Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
                 children: [
+                  // ── Account Info
                   Card(
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     child: Column(
                       children: [
-                        ListTile(
-                          leading: const Icon(Icons.person),
-                          title: const Text('Name'),
-                          subtitle: Text(currentUser?.name ?? 'Not set'),
-                          trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                        _buildProfileListTile(
+                          context,
+                          icon: Icons.person,
+                          title: 'Name',
+                          subtitle: currentUser?.name ?? 'Not set',
                           onTap: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const EditProfileScreen(),
-                              ),
+                                  builder: (context) => const EditProfileScreen()),
                             ).then((_) => setState(() {}));
                           },
                         ),
-                        const Divider(height: 1),
-                        ListTile(
-                          leading: const Icon(Icons.phone),
-                          title: const Text('Phone'),
-                          subtitle: Text(currentUser?.phone ?? 'Not set'),
-                          trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                        _buildProfileListTile(
+                          context,
+                          icon: Icons.phone,
+                          title: 'Phone',
+                          subtitle: currentUser?.phone ?? 'Not set',
                           onTap: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const EditProfileScreen(),
-                              ),
+                                  builder: (context) => const EditProfileScreen()),
                             ).then((_) => setState(() {}));
                           },
                         ),
-                        const Divider(height: 1),
-                        ListTile(
-                          leading: const Icon(Icons.email),
-                          title: const Text('Email'),
-                          subtitle: Text(currentUser?.email ?? 'Not set'),
-                          trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                        _buildProfileListTile(
+                          context,
+                          icon: Icons.email,
+                          title: 'Email',
+                          subtitle: currentUser?.email ?? 'Not set',
                           onTap: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const EditProfileScreen(),
-                              ),
+                                  builder: (context) => const EditProfileScreen()),
                             ).then((_) => setState(() {}));
                           },
                         ),
@@ -187,53 +185,54 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ),
                   const SizedBox(height: 16),
+
+                  // ── Settings
                   Card(
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     child: Column(
                       children: [
-                        ListTile(
-                          leading: const Icon(Icons.notifications),
-                          title: const Text('Notifications'),
-                          trailing: Switch(
-                            value: true,
-                            onChanged: (value) {},
-                          ),
+                        _buildProfileListTile(
+                          context,
+                          icon: Icons.notifications,
+                          title: 'Notifications',
+                          trailing: Switch(value: true, onChanged: (value) {}),
                         ),
-                        const Divider(height: 1),
-                        ListTile(
-                          leading: const Icon(Icons.location_on),
-                          title: const Text('Location Services'),
-                          trailing: Switch(
-                            value: true,
-                            onChanged: (value) {},
-                          ),
+                        _buildProfileListTile(
+                          context,
+                          icon: Icons.location_on,
+                          title: 'Location Services',
+                          trailing: Switch(value: true, onChanged: (value) {}),
                         ),
                       ],
                     ),
                   ),
                   const SizedBox(height: 16),
+
+                  // ── Help & Logout
                   Card(
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     child: Column(
                       children: [
-                        ListTile(
-                          leading: const Icon(Icons.help),
-                          title: const Text('Help & Support'),
+                        _buildProfileListTile(
+                          context,
+                          icon: Icons.help,
+                          title: 'Help & Support',
                           trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                           onTap: () {},
                         ),
-                        const Divider(height: 1),
-                        ListTile(
-                          leading: const Icon(Icons.info),
-                          title: const Text('About'),
+                        _buildProfileListTile(
+                          context,
+                          icon: Icons.info,
+                          title: 'About',
                           trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                           onTap: () {},
                         ),
-                        const Divider(height: 1),
-                        ListTile(
-                          leading: const Icon(Icons.logout, color: Colors.red),
-                          title: const Text(
-                            'Logout',
-                            style: TextStyle(color: Colors.red),
-                          ),
+                        _buildProfileListTile(
+                          context,
+                          icon: Icons.logout,
+                          title: 'Logout',
+                          titleColor: Theme.of(context).colorScheme.error,
+                          iconColor: Theme.of(context).colorScheme.error,
                           onTap: () async {
                             final confirm = await showDialog<bool>(
                               context: context,
@@ -248,7 +247,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   FilledButton(
                                     onPressed: () => Navigator.pop(context, true),
                                     style: FilledButton.styleFrom(
-                                      backgroundColor: Colors.red,
+                                      backgroundColor: Theme.of(context).colorScheme.error,
                                     ),
                                     child: const Text('Logout'),
                                   ),
@@ -277,6 +276,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  ListTile _buildProfileListTile(
+    BuildContext context, {
+    required IconData icon,
+    required String title,
+    String? subtitle,
+    Widget? trailing,
+    VoidCallback? onTap,
+    Color? titleColor,
+    Color? iconColor,
+  }) {
+    return ListTile(
+      leading: Icon(icon, color: iconColor ?? Theme.of(context).colorScheme.primary),
+      title: Text(
+        title,
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          color: titleColor ?? Colors.black,
+        ),
+      ),
+      subtitle: subtitle != null ? Text(subtitle) : null,
+      trailing: trailing ?? const Icon(Icons.arrow_forward_ios, size: 16),
+      onTap: onTap,
     );
   }
 }
