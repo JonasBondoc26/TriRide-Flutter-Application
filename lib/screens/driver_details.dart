@@ -12,6 +12,7 @@ class DriverDetailsScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: const Color(0xFF183D59),
         title: const Text('Driver Details'),
+        foregroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
         child: Column(

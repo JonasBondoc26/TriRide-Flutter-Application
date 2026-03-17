@@ -18,6 +18,7 @@ class RideDetailsScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: const Color(0xFF183D59),
         title: const Text('Ride Details'),
+        foregroundColor: Colors.white,
         actions: [
           IconButton(
             icon: const Icon(Icons.delete),
@@ -62,9 +63,9 @@ class RideDetailsScreen extends StatelessWidget {
               padding: const EdgeInsets.all(32),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [
-                    const Color(0xFF183D59),
-                    const Color(0xFF2E5C7F),
+                  colors: const [
+                    Color(0xFF183D59),
+                    Color(0xFF2E5C7F),
                   ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
@@ -118,9 +119,10 @@ class RideDetailsScreen extends StatelessWidget {
                                 ?.copyWith(fontWeight: FontWeight.bold),
                           ),
                           const SizedBox(height: 16),
-                          _buildInfoRow(Icons.person, 'Driver', ride.driverName),
-                          _buildInfoRow(Icons.confirmation_number, 'Plate Number',
-                              ride.plateNumber),
+                          _buildInfoRow('Driver', ride.driverName,
+                              icon: Icons.person),
+                          _buildInfoRow('Plate Number', ride.plateNumber,
+                              icon: Icons.confirmation_number),
                         ],
                       ),
                     ),
@@ -147,11 +149,12 @@ class RideDetailsScreen extends StatelessWidget {
                                 ?.copyWith(fontWeight: FontWeight.bold),
                           ),
                           const SizedBox(height: 16),
-                          _buildInfoRow(Icons.my_location, 'Pickup', ride.pickup),
-                          _buildInfoRow(
-                              Icons.location_on, 'Destination', ride.destination),
-                          _buildInfoRow(Icons.payments, 'Fare',
-                              '₱${ride.fare.toStringAsFixed(0)}'),
+                          _buildInfoRow('Pickup', ride.pickup,
+                              icon: Icons.my_location),
+                          _buildInfoRow('Destination', ride.destination,
+                              icon: Icons.location_on),
+                          _buildInfoRow('Fare', '₱${ride.fare.toStringAsFixed(0)}',
+                              icon: Icons.payments),
                         ],
                       ),
                     ),
@@ -185,21 +188,32 @@ class RideDetailsScreen extends StatelessWidget {
     }
   }
 
-  // ── Info Row
-  Widget _buildInfoRow(IconData icon, String label, String value) {
+  // ── Improved Info Row (label above value)
+  Widget _buildInfoRow(String label, String value, {IconData? icon}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, size: 20, color: Colors.grey[600]),
-          const SizedBox(width: 12),
-          Text(label, style: const TextStyle(color: Colors.grey, fontSize: 14)),
-          const Spacer(),
-          Flexible(
-            child: Text(
-              value,
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-              textAlign: TextAlign.end,
+          if (icon != null) ...[
+            Icon(icon, size: 20, color: Colors.grey[600]),
+            const SizedBox(width: 12),
+          ],
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: const TextStyle(color: Colors.grey, fontSize: 14),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  value,
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 14),
+                ),
+              ],
             ),
           ),
         ],

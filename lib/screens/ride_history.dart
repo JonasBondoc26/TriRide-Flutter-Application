@@ -16,7 +16,7 @@ class _RideHistoryScreenState extends State<RideHistoryScreen> {
       appBar: AppBar(
         backgroundColor: const Color(0xFF183D59),
         title: const Text('Ride History'),
-        foregroundColor: Colors.white,
+        
       ),
       body: DataStore.rideHistory.isEmpty
           ? const Center(
@@ -113,35 +113,33 @@ class _RideHistoryScreenState extends State<RideHistoryScreen> {
                           const SizedBox(height: 12),
                           // ── Pickup
                           Row(
-                            children: const [
-                              Icon(Icons.circle, size: 12, color: Color(0xFF31A9A2)),
-                              SizedBox(width: 8),
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Icon(Icons.circle, size: 15, color: Color(0xFF31A9A2)),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Text(
+                                  ride.pickup,
+                                  style: const TextStyle(fontSize: 14),
+                                ),
+                              ),
                             ],
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 20),
-                            child: Text(
-                              ride.pickup,
-                              style: const TextStyle(fontSize: 14),
-                            ),
                           ),
                           const SizedBox(height: 8),
                           // ── Destination
                           Row(
-                            children: const [
-                              Icon(Icons.location_on, size: 12, color: Color(0xFFF2862E)),
-                              SizedBox(width: 8),
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Icon(Icons.location_on, size: 15, color: Color(0xFFF2862E)),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Text(
+                                  ride.destination,
+                                  style: const TextStyle(fontSize: 14),
+                                ),
+                              ),
                             ],
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 20),
-                            child: Text(
-                              ride.destination,
-                              style: const TextStyle(fontSize: 14),
-                            ),
-                          ),
-
-                          const Divider(height: 24),
                           // ── Date and Fare
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
