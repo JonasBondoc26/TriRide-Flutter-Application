@@ -11,7 +11,6 @@ void main() {
     name: 'Demo User',
     phone: '+63 912 345 6789',
   ).then((_) {
-    // Logout after creating demo account so user can login
     AuthService.logout();
   });
   
