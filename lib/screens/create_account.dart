@@ -87,6 +87,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
       appBar: AppBar(
         title: const Text('Create Account'),
         backgroundColor: const Color(0xFF183D59),
+        foregroundColor: Colors.white,
       ),
       body: SafeArea(
         child: SingleChildScrollView(

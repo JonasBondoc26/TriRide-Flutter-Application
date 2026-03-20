@@ -16,7 +16,7 @@ class _RideHistoryScreenState extends State<RideHistoryScreen> {
       appBar: AppBar(
         backgroundColor: const Color(0xFF183D59),
         title: const Text('Ride History'),
-        
+        foregroundColor: Colors.white,
       ),
       body: DataStore.rideHistory.isEmpty
           ? const Center(
